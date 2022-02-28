@@ -140,7 +140,7 @@ int main(int argc, char** argv)
         const auto amr_nvars =
             node["amr_node_vars"].as<std::vector<std::string>>();
         const int num_timesteps = node["num_timesteps"].as<int>();
-
+        const int nonlinear_its = node["nonlinear_its"].as<int>();
         for (int i = 0; i < num_nwsolvers; i++) {
             if (nalu_comms.at(i) != MPI_COMM_NULL)
                 sim.register_solver<exawind::NaluWind>(
@@ -152,8 +152,7 @@ int main(int argc, char** argv)
         sim.echo("Initializing overset simulation");
         sim.initialize();
         sim.echo("Initialization successful");
-
-        sim.run_timesteps(num_timesteps);
+        sim.run_timesteps(nonlinear_its, num_timesteps);
     }
 
     if (amr_comm != MPI_COMM_NULL) exawind::AMRWind::finalize();
